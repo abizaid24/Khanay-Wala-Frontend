@@ -26,6 +26,7 @@ import { Input } from "../../components/ui/Input";
 import { Textarea } from "../../components/ui/Textarea";
 import { Spinner } from "../../components/ui/Spinner";
 import { EmptyState } from "../../components/shared/EmptyState";
+import { ImageUpload } from "../../components/shared/ImageUpload";
 import { StatCard } from "../../components/shared/StatCard";
 import { SimpleBarChart } from "../../components/shared/SimpleBarChart";
 import {
@@ -43,7 +44,7 @@ const TABS = [
   { key: "analytics", label: "Analytics", icon: BarChart3 },
 ];
 
-const EMPTY_ITEM = { name: "", description: "", price: "", is_available: true };
+const EMPTY_ITEM = { name: "", description: "", price: "", image_url: null, is_available: true };
 
 function MenuItemForm({ initial, onSubmit, onCancel, saving }) {
   const [form, setForm] = useState(initial || EMPTY_ITEM);
@@ -58,6 +59,7 @@ function MenuItemForm({ initial, onSubmit, onCancel, saving }) {
       }}
       className="flex flex-col gap-3"
     >
+      <ImageUpload value={form.image_url} onChange={(url) => setForm((f) => ({ ...f, image_url: url }))} />
       <Input label="Dish name" required value={form.name} onChange={change("name")} placeholder="e.g. Chicken Karahi" />
       <Textarea label="Description" value={form.description} onChange={change("description")} rows={2} placeholder="Short, tasty description" />
       <Input label="Price (PKR)" type="number" min="0" step="1" required value={form.price} onChange={change("price")} />
@@ -158,7 +160,7 @@ function MenuTab({ restaurantId }) {
               <Card key={item.id} className="p-5">
                 <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">Edit dish</h3>
                 <MenuItemForm
-                  initial={{ name: item.name, description: item.description || "", price: item.price, is_available: item.is_available }}
+                  initial={{ name: item.name, description: item.description || "", price: item.price, image_url: item.image_url || null, is_available: item.is_available }}
                   onSubmit={(values) => handleUpdate(item.id, values)}
                   onCancel={() => setEditingId(null)}
                   saving={busyId === item.id}
@@ -167,10 +169,19 @@ function MenuTab({ restaurantId }) {
             ) : (
               <Card key={item.id} className="flex flex-col gap-3 p-5">
                 <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0">
-                    <h3 className="truncate font-semibold text-ink-900 dark:text-cream-50">{item.name}</h3>
-                    {item.description && <p className="mt-0.5 line-clamp-2 text-sm text-ink-600 dark:text-ink-200">{item.description}</p>}
-                    <p className="mt-1.5 font-mono text-sm font-semibold text-saffron-600 dark:text-saffron-400">{formatPKR(item.price)}</p>
+                  <div className="flex min-w-0 gap-3">
+                    {item.image_url && (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="size-14 shrink-0 rounded-xl object-cover border border-ink-900/10 dark:border-cream-100/10"
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <h3 className="truncate font-semibold text-ink-900 dark:text-cream-50">{item.name}</h3>
+                      {item.description && <p className="mt-0.5 line-clamp-2 text-sm text-ink-600 dark:text-ink-200">{item.description}</p>}
+                      <p className="mt-1.5 font-mono text-sm font-semibold text-saffron-600 dark:text-saffron-400">{formatPKR(item.price)}</p>
+                    </div>
                   </div>
                   <Badge tone={item.is_available ? "cardamom" : "neutral"}>{item.is_available ? "Available" : "Unavailable"}</Badge>
                 </div>
