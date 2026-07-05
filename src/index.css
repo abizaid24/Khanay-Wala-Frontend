@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   KhanayWala Design System
+   A warm, premium desi food-ordering identity — saffron & paprika
+   over a golden-cream base, with a "kitchen order ticket" motif
+   as the signature structural device (see .kot-divider / .ticket).
+----------------------------------------------------------------- */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-sans: "Manrope", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "Menlo", monospace;
+
+  /* Brand palette */
+  --color-cream-50: #fffaf2;
+  --color-cream-100: #fbf2e2;
+  --color-cream-200: #f4e6cc;
+  --color-cream-300: #e8d3a8;
+
+  --color-ink-900: #1c140f;
+  --color-ink-800: #241b15;
+  --color-ink-700: #33271d;
+  --color-ink-600: #4a3a2c;
+  --color-ink-400: #7a6653;
+  --color-ink-200: #b7a690;
+
+  --color-saffron-50: #fdf1de;
+  --color-saffron-200: #f8cd8b;
+  --color-saffron-400: #f0a545;
+  --color-saffron-500: #e8912e;
+  --color-saffron-600: #cc7620;
+  --color-saffron-700: #a55d17;
+
+  --color-paprika-400: #d65a3f;
+  --color-paprika-500: #c1402a;
+  --color-paprika-600: #9e3120;
+
+  --color-cardamom-400: #6f8a58;
+  --color-cardamom-500: #526b3f;
+  --color-cardamom-600: #3d5230;
+
+  --color-gold-400: #cba05f;
+  --color-gold-500: #b8863e;
+
+  --shadow-soft: 0 1px 2px rgb(28 20 15 / 0.04), 0 8px 24px -8px rgb(28 20 15 / 0.12);
+  --shadow-lifted: 0 2px 4px rgb(28 20 15 / 0.06), 0 16px 40px -12px rgb(28 20 15 / 0.20);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream-50 text-ink-900 font-sans antialiased transition-colors duration-300;
+  }
+
+  .dark body {
+    @apply bg-ink-900 text-cream-100;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+
+  ::selection {
+    background-color: var(--color-saffron-200);
+    color: var(--color-ink-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-saffron-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Glassmorphism surface used for the sticky navbar */
+  .glass-surface {
+    background-color: rgb(251 242 226 / 0.72);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border-bottom: 1px solid rgb(28 20 15 / 0.06);
+  }
+  .dark .glass-surface {
+    background-color: rgb(28 20 15 / 0.6);
+    border-bottom: 1px solid rgb(255 250 242 / 0.06);
+  }
+
+  /* Signature device: a dashed "perforation" rule between sections,
+     evoking a torn kitchen-order-ticket — the ordering ritual this
+     whole product is built around. */
+  .kot-divider {
+    position: relative;
+    height: 1px;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--color-ink-200) 0,
+      var(--color-ink-200) 6px,
+      transparent 6px,
+      transparent 14px
+    );
+    opacity: 0.6;
+  }
+  .dark .kot-divider {
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--color-ink-600) 0,
+      var(--color-ink-600) 6px,
+      transparent 6px,
+      transparent 14px
+    );
+  }
+
+  /* Ticket-stub card: a subtle punch-hole notch on each side,
+     used for menu items / order cards later in the product. */
+  .ticket-notch {
+    position: relative;
+  }
+  .ticket-notch::before,
+  .ticket-notch::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background: var(--color-cream-50);
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+  .dark .ticket-notch::before,
+  .dark .ticket-notch::after {
+    background: var(--color-ink-900);
+  }
+  .ticket-notch::before { left: -8px; }
+  .ticket-notch::after { right: -8px; }
+}
